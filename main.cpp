@@ -11,17 +11,18 @@ struct Node
     Node *next;
     Node *prev;
 };
-Node *head=nullptr;
+
 int licznik=0;
 
 
 //********************************************************************************8
-void wstawia_elem(int klucz)//gotowe
+void wstawia_elem(Node ** head, int klucz)//gotowe
 {
     //srand(time(0));
     double los=rand()%1000;
 //alokacja pamieci na nowy wezel listy
         Node *nowy= new Node;
+        cout<<"nowy "<<nowy<<endl;
         if(!nowy)
         {
             std::cout<<"Nie udalo sie utworzyc nowego wezla listy!\n Brak pamieci!"<<std::endl;
@@ -31,49 +32,48 @@ void wstawia_elem(int klucz)//gotowe
         nowy->klucz=klucz;
         nowy->los=los;
         nowy->ch='T';
-
+cout<<"nowy klucz "<<nowy->klucz<<endl;
 //wstawianie wezla do listy:
 //***********************************************************************************************
 //Gdy lista jest pusta:
 //*************************************************************************************************
-    Node * ptr=head;        //pomocniczt wskaznik wedrujacy
+
+    //Node *temp=*head;   //tymczasowy head
 //**************************************************************************************************8
-        if(head==nullptr)
+//cout<<"ptr :"<<ptr<<endl;
+        if(*head==nullptr)
         {
-            head=nowy;
+            *head=nowy;
             nowy->next=nowy;
             nowy->prev=nowy;
             licznik++;
-
-            //test adresow - pozniej do usuniecia
-            //cout<<"Test adresow I-go wezla:"<<endl;
-            //cout<<"nowy = "<<nowy<<"    "<<"head = "<<head<<"   "<<"nowy->next = "<<nowy->next<<
-           // "   "<<"nowy->prev = "<<nowy->prev<<endl;
+cout<<"head prev"<<(*head)->prev<<endl;
+cout<<"licznik :"<<licznik<<endl;
         }//OK
 //***************************************************************************************************
 //Wstawianie z szukaniem miejsca do niepustej listy:
 
         //Gdy wstawiamy przed HEADa:
-        else if((nowy->klucz)<(ptr->klucz))
+        else if((nowy->klucz)<((*head)->klucz))
         {
-            nowy->next=head;//ok
-            nowy->prev=head->prev;
-            head->prev=nowy;
-            head=nowy;
-            head->prev->next=head;  //wazne odnowienie polaczenia z koncem listy
+            nowy->next=*head;
+            nowy->prev=(*head)->prev;
+            (*head)->prev=nowy;
+            *head=nowy;
+            (*head)->prev->next=*head;  //wazne odnowienie polaczenia z koncem listy
             licznik++;
-            //ok
-//***************************************************************************************************
-            //test adresow - pozniej do usuniecia
-            //cout<<"Test adresow II-go wezla klucz<klucz heada:"<<endl;
-           // cout<<"nowy = "<<nowy<<"    "<<"head = "<<head<<"   "<<"nowy->next = "<<nowy->next<<
-           // "   "<<"nowy->prev = "<<nowy->prev<<endl;
+            cout<<"wezel przed headem: "<<nowy<<"   next "<<nowy->next<<"  prev"<<nowy->prev<<endl;
+            cout<<"wezel przed headem: "<<nowy<<"   head next "<<(*head)->next<<" head prev"<<(*head)->prev<<endl;
+            cout<<"nowy head "<<*head<<endl;
+            //cout<<"ptr "<<ptr<<endl;
 
         }
 //****************************************************************************************************
 
+
             else
             {//gdy wstawiamy gdzies w srodku, lub na koncu:
+                Node * ptr=*head;   //pomocniczt wskaznik wedrujacy
         do
         {   //sprawdzamy, czy to nie duplikat:
             if(nowy->klucz==ptr->klucz)
@@ -81,7 +81,6 @@ void wstawia_elem(int klucz)//gotowe
                 std::cout<<"Powtorzona kluczowa wartosc! "<<nowy->klucz<<" = "<<ptr->klucz<<std::endl;
                 break;
             }
-        //dotad chyba jest dobrze
             if(nowy->klucz<ptr->klucz)//wstawienie przed
             {
                 nowy->next=ptr;
@@ -91,43 +90,45 @@ void wstawia_elem(int klucz)//gotowe
                 licznik++;
                 break;
             }
-            else if(ptr->next==head)//wstawienie za ostatnim elementem listy
+            else if(ptr->next==*head)//wstawienie za ostatnim elementem listy
             {
-                nowy->next=head;
+                nowy->next=*head;
                 nowy->prev=ptr;
-                head->prev=nowy;
+                (*head)->prev=nowy;
                 ptr->next=nowy;
                 licznik++;
                 break;
             }
                 ptr=ptr->next;  //przesuwamy sie o 1 wezel do przodu
         }
-        while(ptr!=head);
+        while(ptr!=*head);
  //   koniec tworzenia wezla listy
             }
 }
 //*************************************************************************************************************
 
 //hurtowe wstawianie wezlow do listy
-void wstawia_X_elem(int X)//gotowe
+void wstawia_X_elem(Node ** head, int X)//gotowe
 {
-    //srand(time(0));
+    Node * ptr=*head;
+
     int los;
     //gdy powtorki...
     //gdy brak pamieci...S
 bool tabl_losowych[99901]{};            //tablica do spkrawdzania powtarzalnosci
 //*********************************************************************************************
 //odznaczenie w tablicy juz istniejacych w liscie kluczy
-if(head)
+if(*head)
 {
-    Node * ptr=head;
+    //Node *ptr=*head;
+
     //przejscie przez liste aby zaktualizowac tablice wystepujacych juz w liscie kluczzy
     do
     {
         if(ptr->klucz>=99&&ptr->klucz<=99999)
             tabl_losowych[ptr->klucz]=true;
         ptr=ptr->next;
-    }while(ptr!=head);
+    }while(ptr!=*head);
     ptr=nullptr; //oslepienie wskaznika
 }
 //**************************************************************************************************
@@ -142,13 +143,12 @@ for(int i=0; i<X; i++)
         tabl_losowych[los]=true;        //zapamietanie wylosowania danej liczb
         los+=99;
     //wywolanie funkcji wstawiajacej dla wylosowanego klucza
-        wstawia_elem(los);
+        wstawia_elem(head, los);
 }
 }
 
 
-
-void prezentacja_poczatek(int liczba_wezlow)
+void prezentacja_poczatek(Node *head, int liczba_wezlow)
 {//funkcja wypisuje n poczatkowych wezlow od czola listy
     Node * ptr=head;
 
@@ -180,7 +180,8 @@ cout<<"zawartosc head: "<<ptr->klucz<<endl;
 }
 
 //**************************************************************************************************888
-void prezentacja_koniec(int liczba_wezlow)
+
+void prezentacja_koniec(Node * head, int liczba_wezlow)
 {//funkcja wypisuje n koncowych wezlow listy
 
     //moze byc ich mniej ...
@@ -195,20 +196,21 @@ void prezentacja_koniec(int liczba_wezlow)
     {
         cout<<"Nie ma tylu wezlow w liscie"<<endl;
         cout<<"Wyswietlimy tylko "<<licznik<<" wezlow"<<endl;
-        liczba_wezlow=licznik;
+        //liczba_wezlow=licznik;
     }
     Node * ptr=head;
     ptr=ptr->prev;
 
-    for(int i=0; i<liczba_wezlow; i++)
+    for(int i=0; i<liczba_wezlow&&licznik>0; i++, licznik--)
     {
         cout<<"Klucz: "<<ptr->klucz<<"  "<<ptr->los<<"  "<<ptr->ch<<endl;
         ptr=ptr->prev;
     }
     delete ptr;
 }
+
 //*******************************************************************************************************
-void szukaj(int klucz)//gotowe
+void szukaj(Node *head, int klucz)//gotowe
 {
     //funkcja wyszukuje wezel o zadanym kluczu i wypisuje go
     Node * ptr=head;
@@ -225,7 +227,7 @@ void szukaj(int klucz)//gotowe
                     //sukces++;
                     cout<<"adres wezla "<<ptr<<"   szukany klucz : "<<ptr->klucz<<
                     "   wartosc losowa double: "<<ptr->los<<endl;
-                    break;
+                    return;
                 }
             ptr=ptr->next;
         }while(ptr!=head);
@@ -239,7 +241,7 @@ void szukaj(int klucz)//gotowe
         ptr=nullptr;
 }
 
-
+/*
 //*********************************************************************************************************
 void usuwanie_elementu(int k)//gotowe
 {//funkcja usuwa z listy wezel o zadanym kluczu
@@ -305,6 +307,7 @@ void usuwanie_elementu(int k)//gotowe
     }
         ptr=nullptr;
 }
+/*
 //************************************************************************************************************88
 void usuwanie_calej_listy()//gotowe
 {
@@ -357,41 +360,50 @@ void usuwanie_calej_listy()//gotowe
 
 
 
+*/
+
 
 //*************************************************************************************************************8
 int main()
 {
     srand(time(0));
-Node *wsk_head=head;
 
-wstawia_elem(100);
+    struct Node *head=nullptr;
+struct Node *wsk_head=head;
 
-wstawia_elem(87);
-wstawia_elem(121);
 
-wstawia_elem(2);
-wstawia_elem(321);
-wstawia_elem(121);
-wstawia_elem(121);
-wstawia_X_elem(12);
-wstawia_elem(1937);
+wstawia_elem(&head, 10000);
+
+
+//cout<<"head w main"<<wsk_head<<"    "<<endl;
+
+wstawia_elem(&head, 8700);
+
+wstawia_elem(&head, 12100);
+
+//wstawia_elem(2);
+//wstawia_elem(321);
+//wstawia_elem(121);
+wstawia_elem(&head, 1);
+wstawia_X_elem(&head, 5);
+//wstawia_elem(1937);
 //usuwanie_elementu(100);
 //usuwanie_elementu(87);
 //usuwanie_elementu(121);
 //usuwanie_calej_listy();
-//szukaj(1937);
+szukaj(head, 121);
 //szukaj(1000000);
 //usuwanie_elementu(100);
 
 //szukaj(1937);
 //usuwanie_elementu(100);
-prezentacja_koniec(30);
-prezentacja_koniec(39);
+//prezentacja_koniec(30);
+//prezentacja_koniec(head, 39);
 //prezentacja_poczatek(100);
-prezentacja_poczatek(5);
-prezentacja_poczatek(5);
-prezentacja_poczatek(49);
-prezentacja_poczatek(5);
+//prezentacja_poczatek(head, 5);
+//prezentacja_poczatek(head, 20);
+//prezentacja_poczatek(head, 49);
+//prezentacja_poczatek(5);
 //usuwanie_calej_listy();
 cout<<"licznik po usunieciu listy: "<<licznik<<endl;
 //usuwanie_calej_listy();
