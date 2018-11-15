@@ -18,7 +18,7 @@ int licznik=0;
 //********************************************************************************8
 void wstawia_elem(int klucz)//gotowe
 {
-    srand(time(0));
+    //srand(time(0));
     double los=rand()%1000;
 //alokacja pamieci na nowy wezel listy
         Node *nowy= new Node;
@@ -111,7 +111,7 @@ void wstawia_elem(int klucz)//gotowe
 //hurtowe wstawianie wezlow do listy
 void wstawia_X_elem(int X)//gotowe
 {
-    srand(time(0));
+    //srand(time(0));
     int los;
     //gdy powtorki...
     //gdy brak pamieci...S
@@ -361,6 +361,7 @@ void usuwanie_calej_listy()//gotowe
 //*************************************************************************************************************8
 int main()
 {
+    srand(time(0));
 Node *wsk_head=head;
 
 wstawia_elem(100);
