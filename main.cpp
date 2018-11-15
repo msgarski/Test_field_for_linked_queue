@@ -120,6 +120,7 @@ bool tabl_losowych[99901]{};            //tablica do spkrawdzania powtarzalnosci
 if(head)
 {
     Node * ptr=head;
+    //przejscie przez liste aby zaktualizowac tablice wystepujacych juz w liscie kluczzy
     do
     {
         if(ptr->klucz>=99&&ptr->klucz<=99999)
@@ -139,74 +140,70 @@ for(int i=0; i<X; i++)
         while(tabl_losowych[los]);
         tabl_losowych[los]=true;        //zapamietanie wylosowania danej liczb
         los+=99;
-//***********************************************************************************************
-wstawia_elem(los);
+    //wywolanie funkcji wstawiajacej dla wylosowanego klucza
+        wstawia_elem(los);
 }
 }
 
 
 
 void prezentacja_poczatek(int liczba_wezlow)
-{
-    //funkcja wypisuje n poczatkowych wezlow od czola listy
+{//funkcja wypisuje n poczatkowych wezlow od czola listy
+
     //moze ich tyle nie byc...
     //lista moze byc pusta
 
 }
 
 void prezentacja_koniec(int liczba_wezlow)
-{
-    //funkcja wypisuje n koncowych wezlow listy
+{//funkcja wypisuje n koncowych wezlow listy
+
     //moze byc ich mniej ...
     //lista moze byc pusta
 }
 
 void szukaj(int klucz)//gotowe
 {
-
-    Node * ptr=head;
     //funkcja wyszukuje wezel o zadanym kluczu i wypisuje go
+    Node * ptr=head;
     //moze go nie znalezc...
-    //lizta moze bbyc pusta...
-    if(head)
+
+    if(head)//lizta moze byc pusta...
     {
-        Node * ptr=head;
-        int sukces=0;
+        //Node * ptr=head;
+        //int sukces=0;
         do
         {
             if(ptr->klucz==klucz)
                 {
-                    sukces++;
+                    //sukces++;
                     cout<<"adres wezla "<<ptr<<"   szukany klucz : "<<ptr->klucz<<
                     "   wartosc losowa double: "<<ptr->los<<endl;
                     break;
                 }
             ptr=ptr->next;
         }while(ptr!=head);
-            if(!sukces)
+            if(ptr==head)//(!sukces)
                 cout<<"Niestety nie udalo sie odnalexc szukanej wartosci..."<<endl;
     }
     else
         {
             cout<<"Lista nie zawiera zadnych elementow!"<<endl;
         }
-
-
-
+        ptr=nullptr;
 }
 
 
 
 void usuwanie_elementu(int k)//gotowe
-{
-    if(!head)
+{//funkcja usuwa z listy wezel o zadanym kluczu
+    if(!head)//gdy lista jest pusta
         {
-            cout<<"Lista nie zawiera zadnych elementow do usuniecia!"<<endl;
+            cout<<"Lista jest pusta i nie zawiera zadnych elementow do usuniecia!"<<endl;
             return;
         }
-
     Node * ptr=head;
-    //funkcja usuwa z listy wezel o zadanym kluczu
+
     //lista moze byc pusta ,,, po usunieciu
     if(head)
     {
@@ -214,54 +211,103 @@ void usuwanie_elementu(int k)//gotowe
         {
             if(ptr->klucz==k)   //znalezienie wezla z szukanym kluczem
             {
-                cout<<"klucz "<<k<<" znaleziony"<<endl;
-                    //gdy X jest headem...
-                    if(ptr==head)
-                    {
-                        cout<<"byl headem"<<endl;
-                        //czy X to jedyny element listy?
-                        if(ptr->next==ptr)
-                        {
-                            cout<<"byl jedynym wezlem:"<<endl;
-                            //trzeba wyzerowac heaada...
+                cout<<"wezel o kluczu "<<k<<" znaleziony..."<<endl;
 
-                            head=nullptr;//chyba ok
+                    if(ptr==head)//gdy X jest headem...
+                    {
+                        cout<<"byl headem ";
+
+                        if(ptr->next==ptr)//czy X to jedyny element listy?
+                        {
+                            cout<<"i w dodatku jedynym wezlem "<<endl;
+
+                            head=nullptr;//wiec trzeba wyzerowac heaada...
                             delete ptr;
                             licznik--;
+                            cout<<"...juz go nie ma wsrod nas."<<endl;
                             return;
                         }
                         else
                         {
-                            cout<<"head, ale nie byl jedyny"<<endl;
+                            cout<<", ale nie byl jedyny"<<endl;
                             //trzeba bedzie przestawic heada...
                             head->prev->next=head->next;
                             head->next->prev=head->prev;
                             head=ptr->next;
                             delete ptr;
                             licznik--;
-                            return;     //ok
-
+                            cout<<"Juz po nim... "<<endl;
+                            return;
                         }
                     }
-                //gdy to nie X, ale nastepny jest headem...
-                else if(ptr!=head)//else if(ptr->next==head)
+                //gdy to nastepny po X jest headem...
+                else //if(ptr!=head)//else if(ptr->next==head)
                 {
                     ptr->prev->next=ptr->next;
                     ptr->next->prev=ptr->prev;
                     licznik--;
                     delete ptr;
+                    cout<<"Byl gdzies w srodku listy. "<<endl;
                     return;
                 }
             }
             ptr=ptr->next;
         }while(ptr!=head);  //dotarcie do konca listy
-            if(ptr==head) //lub ptr==head  wtedy komunikat
+
+        if(ptr==head) //lub ptr==head  wtedy komunikat
                 cout<<"Niestety nie udalo sie odnalexc i usunac wezla o kluczu: "<<k<<endl;
     }
-        //ptr=nullptr;
+        ptr=nullptr;
 }
 
+void usuwanie_calej_listy()//gotowe
+{
 
+
+    if(!licznik)//gdy lista jest pusta
+        {
+            cout<<"Lista jest pusta i nie zawiera zadnych elementow do usuniecia!"<<endl;
+            return;
+        }
+    while(head)
+    {
+                Node * ptr=head;
+
+                        cout<<"byl headem ";
+
+                        if(ptr->next==ptr)//czy X to jedyny element listy?
+                        {
+                            cout<<"i w dodatku jedynym wezlem "<<endl;
+
+                            head=nullptr;//wiec trzeba wyzerowac heaada...
+                            delete ptr;
+                            licznik--;
+                            cout<<"...juz go nie ma wsrod nas."<<endl;
+                            //return;
+                        }
+                        else
+                        {
+                            cout<<", ale nie byl jedyny"<<endl;
+                            //trzeba bedzie przestawic heada...
+                            head->prev->next=head->next;
+                            head->next->prev=head->prev;
+                            head=ptr->next;
+                            //delete ptr;
+                            licznik--;
+                            cout<<"Juz po nim... "<<endl;
+
+                        }
+                        cout<<"Licznik w funkcji: "<<licznik<<endl;
+
+
+    }
+
+            if((!head)||(!licznik))
+            {
+                cout<<"Lista usunieta..."<<endl;
+                return;
+            }
+}
 
 
 
@@ -272,23 +318,32 @@ int main()
 
 
 wstawia_elem(100);
-/*
+
 wstawia_elem(87);
 wstawia_elem(121);
-wstawia_elem(2);
-wstawia_elem(321);
-wstawia_elem(121);
-wstawia_elem(121);
+
+//wstawia_elem(2);
+//wstawia_elem(321);
+//wstawia_elem(121);
+//wstawia_elem(121);
 wstawia_X_elem(12);
-wstawia_elem(1937);
-*/
-szukaj(1937);
-szukaj(1000000);
-usuwanie_elementu(100);
+//wstawia_elem(1937);
+//usuwanie_elementu(100);
+//usuwanie_elementu(87);
+//usuwanie_elementu(121);
+usuwanie_calej_listy();
+//szukaj(1937);
+//szukaj(1000000);
+//usuwanie_elementu(100);
 
-szukaj(1937);
-usuwanie_elementu(100);
+//szukaj(1937);
+//usuwanie_elementu(100);
+usuwanie_calej_listy();
+cout<<"licznik po usunieciu listy: "<<licznik<<endl;
+//usuwanie_calej_listy();
+//usuwanie_calej_listy();
 
+/*
 cout<<"head = "<<head<<endl;
 //usuwanie_elementu(100);
 if(head)
@@ -299,8 +354,6 @@ cout<<"wsk_head = "<<wsk_head<<endl;
 std::cout<<"Licznik : "<<licznik<<std::endl;
 cout<<"Petla:"<<endl;
 
-
-
 do
 {
 cout<<"adres wezla "<<wsk_head<<"   klucz : "<<wsk_head->klucz<<"   next: "<<wsk_head->next<<endl;
@@ -309,7 +362,7 @@ wsk_head=wsk_head->next;
 }while(wsk_head!=head);
 
 }
-
+*/
 
     return 0;
 }
