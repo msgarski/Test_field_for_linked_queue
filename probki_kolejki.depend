@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1542230128 source:d:\uniwersytet 3-go wieku\testowanie\probki_kolejki\main.cpp
+	<iostream>
+	<cstdio>
+	<ctime>
+
