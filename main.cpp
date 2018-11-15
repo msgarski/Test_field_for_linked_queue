@@ -19,6 +19,7 @@ int licznik=0;
 void wstawia_elem(int klucz)//gotowe
 {
     srand(time(0));
+    double los=rand()%1000;
 //alokacja pamieci na nowy wezel listy
         Node *nowy= new Node;
         if(!nowy)
@@ -28,7 +29,7 @@ void wstawia_elem(int klucz)//gotowe
         }
 //inicjalizacja liczbowych zmiennych wezla:
         nowy->klucz=klucz;
-        nowy->los=rand()%1000;
+        nowy->los=los;
         nowy->ch='T';
 
 //wstawianie wezla do listy:
@@ -149,19 +150,64 @@ for(int i=0; i<X; i++)
 
 void prezentacja_poczatek(int liczba_wezlow)
 {//funkcja wypisuje n poczatkowych wezlow od czola listy
+    Node * ptr=head;
 
     //moze ich tyle nie byc...
     //lista moze byc pusta
+        cout<<"Wyswietlenie "<<liczba_wezlow<<" poczatkowych wezlow listy:"<<endl;
+
+    if(!head)
+    {
+        cout<<"Blad!! Lista jest pusta. Nie mozna nic wyswietlic."<<endl;
+        return;
+    }
+    else if(licznik<liczba_wezlow)
+    {
+        cout<<"Nie ma tylu wezlow w liscie"<<endl;
+        cout<<"Wyswietlimy tylko "<<licznik<<" wezlow"<<endl;
+    }
+    //ptr=ptr->prev;
+cout<<"zawartosc head: "<<ptr->klucz<<endl;
+    for(int i=0; i<liczba_wezlow; i++)
+    {
+        cout<<"Klucz: "<<ptr->klucz<<"  "<<ptr->los<<"  "<<ptr->ch<<endl;
+        ptr=ptr->next;
+        if(ptr==head)
+            return;
+    }
+    delete ptr;
 
 }
 
+//**************************************************************************************************888
 void prezentacja_koniec(int liczba_wezlow)
 {//funkcja wypisuje n koncowych wezlow listy
 
     //moze byc ich mniej ...
     //lista moze byc pusta
-}
+    cout<<"Wyswietlenie "<<liczba_wezlow<<" wezlow listy:"<<endl;
+    if(!head)
+    {
+        cout<<"Blad!! Listaa jest pusta. Nie mozna nic wyswietlic."<<endl;
+        return;
+    }
+    else if(licznik<liczba_wezlow)
+    {
+        cout<<"Nie ma tylu wezlow w liscie"<<endl;
+        cout<<"Wyswietlimy tylko "<<licznik<<" wezlow"<<endl;
+        liczba_wezlow=licznik;
+    }
+    Node * ptr=head;
+    ptr=ptr->prev;
 
+    for(int i=0; i<liczba_wezlow; i++)
+    {
+        cout<<"Klucz: "<<ptr->klucz<<"  "<<ptr->los<<"  "<<ptr->ch<<endl;
+        ptr=ptr->prev;
+    }
+    delete ptr;
+}
+//*******************************************************************************************************
 void szukaj(int klucz)//gotowe
 {
     //funkcja wyszukuje wezel o zadanym kluczu i wypisuje go
@@ -194,7 +240,7 @@ void szukaj(int klucz)//gotowe
 }
 
 
-
+//*********************************************************************************************************
 void usuwanie_elementu(int k)//gotowe
 {//funkcja usuwa z listy wezel o zadanym kluczu
     if(!head)//gdy lista jest pusta
@@ -259,7 +305,7 @@ void usuwanie_elementu(int k)//gotowe
     }
         ptr=nullptr;
 }
-
+//************************************************************************************************************88
 void usuwanie_calej_listy()//gotowe
 {
 
@@ -312,33 +358,40 @@ void usuwanie_calej_listy()//gotowe
 
 
 
-
+//*************************************************************************************************************8
 int main()
 {
-
+Node *wsk_head=head;
 
 wstawia_elem(100);
 
 wstawia_elem(87);
 wstawia_elem(121);
 
-//wstawia_elem(2);
-//wstawia_elem(321);
-//wstawia_elem(121);
-//wstawia_elem(121);
+wstawia_elem(2);
+wstawia_elem(321);
+wstawia_elem(121);
+wstawia_elem(121);
 wstawia_X_elem(12);
-//wstawia_elem(1937);
+wstawia_elem(1937);
 //usuwanie_elementu(100);
 //usuwanie_elementu(87);
 //usuwanie_elementu(121);
-usuwanie_calej_listy();
+//usuwanie_calej_listy();
 //szukaj(1937);
 //szukaj(1000000);
 //usuwanie_elementu(100);
 
 //szukaj(1937);
 //usuwanie_elementu(100);
-usuwanie_calej_listy();
+prezentacja_koniec(30);
+prezentacja_koniec(39);
+//prezentacja_poczatek(100);
+prezentacja_poczatek(5);
+prezentacja_poczatek(5);
+prezentacja_poczatek(49);
+prezentacja_poczatek(5);
+//usuwanie_calej_listy();
 cout<<"licznik po usunieciu listy: "<<licznik<<endl;
 //usuwanie_calej_listy();
 //usuwanie_calej_listy();
